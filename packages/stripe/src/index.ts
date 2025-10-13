@@ -529,6 +529,7 @@ export const stripe = <O extends StripeOptions>(options: O) => {
 						session,
 						plan,
 						subscription,
+						annual: ctx.body.annual,
 					},
 					ctx.request,
 					//@ts-expect-error

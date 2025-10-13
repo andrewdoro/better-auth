@@ -297,6 +297,7 @@ export interface StripeOptions {
 				session: Session & Record<string, any>;
 				plan: StripePlan;
 				subscription: Subscription;
+				annual: boolean;
 			},
 			ctx: GenericEndpointContext,
 		) =>
