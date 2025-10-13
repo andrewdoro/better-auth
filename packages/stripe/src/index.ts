@@ -548,6 +548,8 @@ export const stripe = <O extends StripeOptions>(options: O) => {
 						? { trial_period_days: plan.freeTrial.days }
 						: undefined;
 
+				const isEmbeddedCheckout = options.subscription?.useEmbeddedCheckout;
+
 				const checkoutSession = await client.checkout.sessions
 					.create(
 						{
@@ -562,15 +564,29 @@ export const stripe = <O extends StripeOptions>(options: O) => {
 								: {
 										customer_email: session.user.email,
 									}),
-							success_url: getUrl(
-								ctx,
-								`${
-									ctx.context.baseURL
-								}/subscription/success?callbackURL=${encodeURIComponent(
-									ctx.body.successUrl,
-								)}&subscriptionId=${encodeURIComponent(subscription.id)}`,
-							),
-							cancel_url: getUrl(ctx, ctx.body.cancelUrl),
+							...(isEmbeddedCheckout
+								? {
+										ui_mode: "custom" as const,
+										return_url: getUrl(
+											ctx,
+											`${
+												ctx.context.baseURL
+											}/subscription/success?callbackURL=${encodeURIComponent(
+												ctx.body.successUrl,
+											)}&subscriptionId=${encodeURIComponent(subscription.id)}`,
+										),
+									}
+								: {
+										success_url: getUrl(
+											ctx,
+											`${
+												ctx.context.baseURL
+											}/subscription/success?callbackURL=${encodeURIComponent(
+												ctx.body.successUrl,
+											)}&subscriptionId=${encodeURIComponent(subscription.id)}`,
+										),
+										cancel_url: getUrl(ctx, ctx.body.cancelUrl),
+									}),
 							line_items: [
 								{
 									price: priceIdToUse,
@@ -600,7 +616,7 @@ export const stripe = <O extends StripeOptions>(options: O) => {
 					});
 				return ctx.json({
 					...checkoutSession,
-					redirect: !ctx.body.disableRedirect,
+					redirect: !ctx.body.disableRedirect && !isEmbeddedCheckout,
 				});
 			},
 		),

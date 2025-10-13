@@ -215,6 +215,16 @@ export interface StripeOptions {
 		 */
 		plans: StripePlan[] | (() => StripePlan[] | Promise<StripePlan[]>);
 		/**
+		 * Use embedded checkout form instead of hosted checkout page
+		 *
+		 * When enabled, the checkout session will return a client_secret
+		 * that can be used with Stripe's embedded checkout SDK
+		 *
+		 * @default false
+		 * @see https://stripe.com/docs/payments/checkout/how-checkout-works#embedded-checkout
+		 */
+		useEmbeddedCheckout?: boolean;
+		/**
 		 * Require email verification before a user is allowed to upgrade
 		 * their subscriptions
 		 *
