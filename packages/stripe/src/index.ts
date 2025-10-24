@@ -224,6 +224,22 @@ export const stripe = <O extends StripeOptions>(options: O) => {
 								"Disable redirect after successful subscription. Eg: true",
 						})
 						.default(false),
+					/**
+					 * Enable adjustable quantity in checkout
+					 */
+					adjustableQuantity: z
+						.object({
+							enabled: z.boolean().meta({
+								description: "Enable adjustable quantity in checkout. Eg: true",
+							}),
+							minimum: z.number().optional().meta({
+								description: "Minimum quantity allowed. Eg: 1",
+							}),
+							maximum: z.number().optional().meta({
+								description: "Maximum quantity allowed. Eg: 10",
+							}),
+						})
+						.optional(),
 				}),
 				use: [
 					sessionMiddleware,
@@ -576,18 +592,14 @@ export const stripe = <O extends StripeOptions>(options: O) => {
 								{
 									price: priceIdToUse,
 									quantity: ctx.body.seats || 1,
-									...(options.subscription?.adjustableQuantity?.enabled && {
+									...(ctx.body.adjustableQuantity?.enabled && {
 										adjustable_quantity: {
 											enabled: true,
-											...(options.subscription.adjustableQuantity.minimum !==
-												undefined && {
-												minimum:
-													options.subscription.adjustableQuantity.minimum,
+											...(ctx.body.adjustableQuantity.minimum !== undefined && {
+												minimum: ctx.body.adjustableQuantity.minimum,
 											}),
-											...(options.subscription.adjustableQuantity.maximum !==
-												undefined && {
-												maximum:
-													options.subscription.adjustableQuantity.maximum,
+											...(ctx.body.adjustableQuantity.maximum !== undefined && {
+												maximum: ctx.body.adjustableQuantity.maximum,
 											}),
 										},
 									}),
