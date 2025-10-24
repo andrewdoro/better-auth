@@ -92,6 +92,7 @@ export async function onCheckoutSessionCompleted(
 			}
 		}
 	} catch (e: any) {
+		console.log(e);
 		logger.error(`Stripe webhook failed. Error: ${e.message}`);
 	}
 }
@@ -204,6 +205,7 @@ export async function onSubscriptionUpdated(
 			}
 		}
 	} catch (error: any) {
+		console.log(error);
 		logger.error(`Stripe webhook failed. Error: ${error}`);
 	}
 }
@@ -253,6 +255,7 @@ export async function onSubscriptionDeleted(
 			);
 		}
 	} catch (error: any) {
+		console.log(error);
 		logger.error(`Stripe webhook failed. Error: ${error}`);
 	}
 }

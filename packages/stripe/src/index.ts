@@ -1265,6 +1265,7 @@ export const stripe = <O extends StripeOptions>(options: O) => {
 								break;
 						}
 					} catch (e: any) {
+						console.log(e);
 						ctx.context.logger.error(
 							`Stripe webhook failed. Error: ${e.message}`,
 						);
