@@ -315,6 +315,29 @@ export interface StripeOptions {
 		organization?: {
 			enabled: boolean;
 		};
+		/**
+		 * Adjustable quantity options for checkout sessions
+		 *
+		 * Allows customers to adjust the quantity of items in their cart
+		 * during checkout.
+		 */
+		adjustableQuantity?: {
+			/**
+			 * Whether adjustable quantity is enabled
+			 * @default false
+			 */
+			enabled: boolean;
+			/**
+			 * Minimum quantity allowed
+			 * @default 1
+			 */
+			minimum?: number;
+			/**
+			 * Maximum quantity allowed
+			 * @default undefined (no maximum)
+			 */
+			maximum?: number;
+		};
 	};
 	/**
 	 * A callback to run after a stripe event is received

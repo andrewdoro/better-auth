@@ -576,6 +576,21 @@ export const stripe = <O extends StripeOptions>(options: O) => {
 								{
 									price: priceIdToUse,
 									quantity: ctx.body.seats || 1,
+									...(options.subscription?.adjustableQuantity?.enabled && {
+										adjustable_quantity: {
+											enabled: true,
+											...(options.subscription.adjustableQuantity.minimum !==
+												undefined && {
+												minimum:
+													options.subscription.adjustableQuantity.minimum,
+											}),
+											...(options.subscription.adjustableQuantity.maximum !==
+												undefined && {
+												maximum:
+													options.subscription.adjustableQuantity.maximum,
+											}),
+										},
+									}),
 								},
 							],
 							subscription_data: {
